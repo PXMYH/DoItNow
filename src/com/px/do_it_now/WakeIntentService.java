@@ -20,7 +20,6 @@ public abstract class WakeIntentService extends IntentService {
 	        try {
 	        	activateAlarm(intent);
 	        	activateNotification(intent);
-	        	activateLED(intent);
 	        } finally {
 	        	// release the wake lock under any circumstances
 	            getLock(this).release();
@@ -54,8 +53,6 @@ public abstract class WakeIntentService extends IntentService {
 	    // execute notification service
 	    abstract void activateNotification (Intent intent);
 	    
-	    // execute LED indication service
-	    abstract void activateLED (Intent intent);
 	    
 	    
 }

@@ -1,22 +1,16 @@
 package com.px.do_it_now;
 
 import java.util.GregorianCalendar;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class MainActivity extends Activity implements android.view.View.OnClickListener {
 
@@ -76,7 +70,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 		AlarmManager alarmManager = (AlarmManager) c.getSystemService (Context.ALARM_SERVICE);
 	
 		// set the alarm time to be 20s after the data entry has been recorded
-		long delay_time = new GregorianCalendar().getTimeInMillis()+10*1000;
+		long delay_time = new GregorianCalendar().getTimeInMillis()+7*1000;
 		
 		// create intent when alarm triggers
 		Intent alarm_trigger = new Intent (this, AlarmReciever.class);
@@ -92,7 +86,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 	}
 
 	
-	
+//  this method is defined in Utilities.java to ensure accessibility for all classes
 //	public void showMessage (CharSequence text) {
 //		int duration = Toast.LENGTH_SHORT;
 //		Toast toast = Toast.makeText(getApplicationContext(), text, duration);
