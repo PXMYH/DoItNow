@@ -12,32 +12,51 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="Entry"
-        android:textColor="#FF0000"
+        android:text="Initiative"
+        android:textColor="@color/red"
         android:textSize="24dp" />
 
     <EditText
-        android:id="@+id/numberStudents"
+        android:id="@+id/initiative"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/text1"
-        android:background="@android:color/white" />
+        android:background="@color/white"
+        android:textColor="@color/blue" />
 
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/Initiative_List"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_below="@id/numberStudents" />
+        android:background="@color/white"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/blue" />
 
     <Button
-        android:id="@+id/confirm"
+        android:id="@+id/timePickerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/timePicker"
+        android:layout_below="@+id/initiative"
+        android:layout_toLeftOf="@+id/confirmButton"
+        android:text="Time" />
+
+    <Button
+        android:id="@+id/confirmButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:background="#ff888888"
+        android:layout_below="@+id/initiative"
         android:text="Add" />
+
+    <Button
+        android:id="@+id/datePickerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/initiative"
+        android:layout_toLeftOf="@id/timePickerButton"
+        android:text="Date" />
 
 </RelativeLayout>
