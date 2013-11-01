@@ -1,5 +1,6 @@
 package com.px.do_it_now;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import android.os.Bundle;
 import android.app.Activity;
@@ -12,9 +13,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.view.View.OnClickListener;
 
 public class MainActivity extends Activity implements android.view.View.OnClickListener {
 
@@ -26,10 +30,42 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 	public static int set_hour  = -1;
 	public static int set_min   = -1;
 	
+	// List of array strings will serve as a list items
+	ArrayList<String> listItems = new ArrayList<String>();
+	
+	// string adapter which will handle the data of the listview
+	ArrayAdapter<String> listAdapter;
+	
+	private EditText et;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		// set up initative list in the main GUI
+		et = (EditText) findViewById (R.id.initiative);
+		ListView initiative_list = (ListView) findViewById (R.id.Initiatives);
+		
+		for (int i = 0; i < 2; i++) {
+			listItems.add("Row:" + i);
+		}
+		
+        listAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
+        initiative_list.setAdapter(listAdapter);
+        
+        Button list_add_button = (Button) findViewById(R.id.listAddButton);
+        list_add_button.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				listItems.add(et.getText().toString());
+				listAdapter.notifyDataSetChanged();
+			}
+        });
+	
+        
+
+		
 		
 		// find buttons on the main GUI
 		// find add reminder button
@@ -46,9 +82,11 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 	
 	}
 
+	// assign functionalities to different buttons on GUI
+	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.confirmButton: 
+		case R.id.confirmButton:
 			displayDialog(v);
 			break;
 		case R.id.timePickerButton:
@@ -56,6 +94,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			break;
 		case R.id.datePickerButton:
 			showDatePicker(v);
+			break;
 		}
 	}
 	
@@ -73,7 +112,6 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 				Utilities.showMessage("Data Canceling ... Waiting for your next order .. ", c);
 				dialog.cancel();	
 			}		
-
 		});
 		
 		dialog_builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
@@ -82,6 +120,8 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 				// TODO transfer data entry to database for future actions
 				Utilities.showMessage ("Data recording ... ", c);
 				store_data_entry(c);
+				//InitiativeList.addItems(v);
+				edit_text_clr(c);
 				scheduleAlarm(c);
 				dialog.dismiss();
 			}
@@ -127,24 +167,26 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 		// locate the initiative list field and display the initiative user sets
 		TextView initiative_list = (TextView) findViewById(R.id.Initiative_List);
 		initiative_list.setText(initiative_content);
-	
 	}
 	
+	// clear the edit text field
+	public void edit_text_clr (Context c) {
+		// locate the input text field
+		EditText editText = (EditText) findViewById (R.id.initiative);
+		editText.setText("");
+	}
+	
+	// construct time picker dialog
 	public void showTimePicker(View v) {
 	    DialogFragment timePickerFragment = new TimePicker();
 	    timePickerFragment.show(getFragmentManager(), "timePicker");
 	}
 	
+	// construct date picker dialog
 	public void showDatePicker(View v) {
 		DialogFragment datePickerFragment = new DatePicker();
 		datePickerFragment.show(getFragmentManager(), "datePicker");
 	}
 	
-//  this method is defined in Utilities.java to ensure accessibility for all classes
-//	public void showMessage (CharSequence text) {
-//		int duration = Toast.LENGTH_SHORT;
-//		Toast toast = Toast.makeText(getApplicationContext(), text, duration);
-//		toast.show();    	
-//    }
 
 }

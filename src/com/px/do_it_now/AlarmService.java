@@ -25,6 +25,7 @@ public class AlarmService extends WakeIntentService {
 		NotificationManager notifier = (NotificationManager) getSystemService (NOTIFICATION_SERVICE);
 		
 		// intent declaration
+		// P.X. opens a fresh new main activity which is not intended, change later
 		Intent notificationIntent = new Intent (this, MainActivity.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		
@@ -36,9 +37,9 @@ public class AlarmService extends WakeIntentService {
 		notifier_builder.setDefaults(Notification.DEFAULT_SOUND);
 		notifier_builder.setContentIntent(pendingIntent);
 		notifier_builder.setWhen(System.currentTimeMillis());
-		
-	    // set notification LED light color
-	    notifier_builder.setLights(Notification.DEFAULT_LIGHTS, 1, 0);
+
+	    // set notification LED light color -- the screen must be locked and dimed to see the LED effect
+	    notifier_builder.setLights(0xFF0000, 250, 200);
 	    
 //		Notification note_content = new Notification(R.drawable.ic_launcher, "DO IT NOW!", System.currentTimeMillis());
 //		note_content.setLatestEventInfo(this, "Title", "Text", pendingIntent);
