@@ -24,8 +24,8 @@ public class TimePicker extends DialogFragment implements TimePickerDialog.OnTim
 	@Override
 	public void onTimeSet(android.widget.TimePicker v, int hourOfDay, int minute) {
 		// Do something with the time chosen by the user
-		CharSequence text = "Bomb is set to " + hourOfDay + " : " + minute;
-		Utilities.showMessage(text, v.getContext());
+		//CharSequence text = "Time is set to " + hourOfDay + " : " + minute;
+		//Utilities.showMessage(text, v.getContext());
 		MainActivity.set_hour = hourOfDay;
 		MainActivity.set_min = minute;
 	}

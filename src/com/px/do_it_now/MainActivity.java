@@ -1,3 +1,9 @@
+/**
+ * App main GUI components:
+ * one entry line
+ * one "Energize" button
+ */
+
 package com.px.do_it_now;
 
 import java.util.ArrayList;
@@ -17,13 +23,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.view.View.OnClickListener;
 
-public class MainActivity extends Activity implements android.view.View.OnClickListener {
+public class MainActivity extends Activity implements OnClickListener {
 
+	/* ********************
+	 * Variable declaration
+	 * ********************/
+	
 	static final int CONFIRM = 1;
 	// create public static variables year/month/day/hour/min to synchronize user date/time setting
+	// TODO: change the public variable structure later, not good practice
 	public static int set_year  = -1;
 	public static int set_month = -1;
 	public static int set_day   = -1;
@@ -36,104 +46,133 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 	// string adapter which will handle the data of the listview
 	ArrayAdapter<String> listAdapter;
 	
-	private EditText et;
+	// instance variables
+	private Button energize;
+	private EditText type_in;
+	private ListView initiative_list;
 	
+	// class variables
+	
+	
+	/* ********
+	 * OnCreate
+	 * ********/
+	
+	// creates user view once the app is launched
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		// set up initative list in the main GUI
-		et = (EditText) findViewById (R.id.initiative);
-		ListView initiative_list = (ListView) findViewById (R.id.Initiatives);
-		
-		for (int i = 0; i < 2; i++) {
-			listItems.add("Row:" + i);
-		}
-		
-        listAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
-        initiative_list.setAdapter(listAdapter);
-        
-        Button list_add_button = (Button) findViewById(R.id.listAddButton);
-        list_add_button.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				listItems.add(et.getText().toString());
-				listAdapter.notifyDataSetChanged();
-			}
-        });
-	
-        
 
+		// initialization
+		init();
 		
-		
-		// find buttons on the main GUI
-		// find add reminder button
-		Button confirm = (Button) findViewById (R.id.confirmButton);
-		confirm.setOnClickListener(this);
-		
-		// add time picker button
-		Button timePicker = (Button) findViewById(R.id.timePickerButton);
-		timePicker.setOnClickListener(this);
-		
-		// add date picker button
-		Button datePicker = (Button) findViewById (R.id.datePickerButton);
-		datePicker.setOnClickListener(this);
-	
+		// set up "ENERGIZE" button functionality
+		setEnergButton();
 	}
 
-	// assign functionalities to different buttons on GUI
+	// assign functionalities to button "Energize"
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.confirmButton:
-			displayDialog(v);
-			break;
-		case R.id.timePickerButton:
-			showTimePicker(v);
-			break;
-		case R.id.datePickerButton:
-			showDatePicker(v);
-			break;
-		}
+		
+		// pick date
+		showDatePicker(v);
+		
+		// pick time
+		showTimePicker(v);
+		
+		// ask user for confirmation
+		displayDialog(v);
 	}
+	
+	/* ***************
+	 * Private methods 
+	 * ***************/
+	
+	// Function: locate all resources on the main GUI
+	private void init() {
+		
+		// find the ENERGIZE button
+		energize = (Button) findViewById (R.id.energizeButton);
+		
+		// locate initiative entry bar
+		type_in = (EditText) findViewById (R.id.typeIn);		
+		
+		// locate initiative list 
+		initiative_list  = (ListView) findViewById (R.id.initiativeList);	
+		//initiative_list.setBackgroundColor(FF1493);
+	}
+	
+	
+	// Function: set up  "ENERGIZE" button main functions: 
+	// 1. invoke Date/Time picker dialogue
+	// 2. confirmation dialogue --> add entry to list
+	//                          --> abandon entry
+	private void setEnergButton () {
+		energize.setOnClickListener(this);
+	}
+	
 	
 	// display the confirmation dialog
 	private void displayDialog (View v) {
 		// get context
 		final Context c = v.getContext();
 		
+		// configure dialogue builder
 		AlertDialog.Builder dialog_builder = new AlertDialog.Builder(this);
-		dialog_builder.setMessage("Add this entry to your to do database?");
+		dialog_builder.setMessage("Save initiative?");
 		
 		dialog_builder.setPositiveButton("No", new DialogInterface.OnClickListener() {
+			// cancel operation
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
-				Utilities.showMessage("Data Canceling ... Waiting for your next order .. ", c);
+				Utilities.showMessage("Cencelled", c);
 				dialog.cancel();	
 			}		
 		});
 		
 		dialog_builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+			// confirm saving
 			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				// TODO transfer data entry to database for future actions
-				Utilities.showMessage ("Data recording ... ", c);
-				store_data_entry(c);
-				//InitiativeList.addItems(v);
-				edit_text_clr(c);
+				//Utilities.showMessage ("Saved", c);
+				setInitiativeList();
 				scheduleAlarm(c);
 				dialog.dismiss();
 			}
 		});
 		
+		// create and display dialogue builder
 		AlertDialog alert_dialog = dialog_builder.create();
 		alert_dialog.show();
 	}
 	
 	
+	// Function: transfer user input initiative to initiative list
+	private void setInitiativeList() {
+
+		// define list adapter
+        listAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,listItems);
+        initiative_list.setAdapter(listAdapter);
+        
+        // save entry to list
+        String entry = type_in.getText().toString() + "    " + set_year + "/" + set_month + "/" + set_day + "  " + set_hour + ":" + set_min;
+		listItems.add(entry);
+		listAdapter.notifyDataSetChanged();
+		
+		// clear entry
+		clearEntry();
+	}
+	
+	// clear the entry input field
+	private void clearEntry () {
+		type_in.setText("");
+	}
+	
+	
 	// schedule an alert 
-	public void scheduleAlarm (Context c) {
+	private void scheduleAlarm (Context c) {
 		
 		// create alarm object
 		AlarmManager alarmManager = (AlarmManager) c.getSystemService (Context.ALARM_SERVICE);
@@ -155,35 +194,19 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
         alarmManager.set(AlarmManager.RTC_WAKEUP,delay_time, pending_action);
         
         // report status 
-        Utilities.showMessage ("BOMB is SET xD", this.getApplicationContext());
+        Utilities.showMessage ("Alarm is SET", this.getApplicationContext());
 	}
 
-	// stores to do initiatives user typed in
-	public void store_data_entry (Context c) {
-		// locate the input text field and retrieve initiative info
-		EditText editText = (EditText) findViewById (R.id.initiative);
-		String initiative_content = editText.getText().toString();
-		
-		// locate the initiative list field and display the initiative user sets
-		TextView initiative_list = (TextView) findViewById(R.id.Initiative_List);
-		initiative_list.setText(initiative_content);
-	}
 	
-	// clear the edit text field
-	public void edit_text_clr (Context c) {
-		// locate the input text field
-		EditText editText = (EditText) findViewById (R.id.initiative);
-		editText.setText("");
-	}
-	
+
 	// construct time picker dialog
-	public void showTimePicker(View v) {
+	private void showTimePicker(View v) {
 	    DialogFragment timePickerFragment = new TimePicker();
 	    timePickerFragment.show(getFragmentManager(), "timePicker");
 	}
 	
 	// construct date picker dialog
-	public void showDatePicker(View v) {
+	private void showDatePicker(View v) {
 		DialogFragment datePickerFragment = new DatePicker();
 		datePickerFragment.show(getFragmentManager(), "datePicker");
 	}

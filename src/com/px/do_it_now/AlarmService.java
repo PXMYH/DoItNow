@@ -40,11 +40,6 @@ public class AlarmService extends WakeIntentService {
 
 	    // set notification LED light color -- the screen must be locked and dimed to see the LED effect
 	    notifier_builder.setLights(0xFF0000, 250, 200);
-	    
-//		Notification note_content = new Notification(R.drawable.ic_launcher, "DO IT NOW!", System.currentTimeMillis());
-//		note_content.setLatestEventInfo(this, "Title", "Text", pendingIntent);
-//		note_content.defaults |= Notification.DEFAULT_ALL;
-//		note_content.flags |= Notification.FLAG_AUTO_CANCEL;
 		
 		// set notification ID
 	    int note_id = 0x00000001;

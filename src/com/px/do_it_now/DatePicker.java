@@ -25,8 +25,8 @@ public class DatePicker extends DialogFragment implements DatePickerDialog.OnDat
 	@Override
 	public void onDateSet (android.widget.DatePicker v, int year, int month, int day) {
 		// Do something with the date chosen by the user
-		CharSequence text = "Bomb is set to " + year + "/" + month + "/" + day;
-		Utilities.showMessage(text, v.getContext());
+		//CharSequence text = "Date is set to " + year + "/" + month + "/" + day;
+		//Utilities.showMessage(text, v.getContext());
 		MainActivity.set_year  = year;
 		MainActivity.set_month = month;
 		MainActivity.set_day   = day;
